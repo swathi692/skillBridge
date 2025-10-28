@@ -1,20 +1,44 @@
+import express from "express";
+import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 
-export const authMiddleware = (req, res, next) => {
-  const authHeader = req.header("Authorization");
+const router = express.Router();
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ error: "No token provided" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
+// Signup
+router.post("/signup", async (req, res) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { id: '...' }
-    next();
+    const { name, email } = req.body;
+    if (!name || !email) return res.status(400).json({ error: "Name and email required" });
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(400).json({ error: "User already exists" });
+
+    const newUser = new User({ name, email });
+    await newUser.save();
+
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    res.status(201).json({ user: newUser, token });
   } catch (err) {
-    console.error("JWT verification failed:", err);
-    return res.status(401).json({ error: "Invalid token" });
+    console.error("Signup error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-};
+});
+
+// Login
+router.post("/login", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Email required" });
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    res.json({ user, token });
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+export default router;
