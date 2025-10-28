@@ -1,0 +1,7 @@
+/* Basic Tailwind-like utilities for this demo - replace with Tailwind if you want */
+body{font-family:Inter,system-ui,Arial;margin:0;background:#f5f7fb;color:#0f172a}
+.container{max-width:1000px;margin:20px auto;padding:20px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(16,24,40,0.08)}
+.nav{display:flex;gap:12px;align-items:center;padding:12px 20px;background:#0b5fff;color:#fff;border-radius:12px}
+.button{padding:8px 12px;border-radius:8px;background:#06b6d4;color:#021124;border:none;cursor:pointer}
+.card{padding:12px;border-radius:10px;border:1px solid #e6eef8;margin-bottom:12px}
+.small{font-size:0.9rem;color:#475569}
