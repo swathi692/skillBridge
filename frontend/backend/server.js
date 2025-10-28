@@ -11,24 +11,21 @@ import exchangeRoutes from "./routes/exchanges.js";
 import messageRoutes from "./routes/messages.js";
 import ratingRoutes from "./routes/ratings.js";
 import adminRoutes from "./routes/admin.js";
-import User from "./models/user.js";
 
 dotenv.config();
 
 const app = express();
 
-// ✅ Allowed frontend origins (add your deployed frontend + backend URLs)
+// ✅ Allowed frontend origins
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://skillbridge-6c0zfh8i2-swathis-projects-cf279158.vercel.app", // your Vercel frontend
-  "https://skillbridge-lviu.onrender.com" // your Render backend (if used for API calls)
+  "https://skillbridge-6c0zfh8i2-swathis-projects-cf279158.vercel.app"
 ];
 
-// ✅ CORS Middleware (must be before routes)
+// ✅ CORS Middleware (Fix)
 app.use(
   cors({
     origin: function (origin, callback) {
-      console.log("Request Origin:", origin);
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -41,13 +38,15 @@ app.use(
   })
 );
 
-// ✅ Body parser
 app.use(express.json());
 
 // ✅ MongoDB Connection
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log("✅ MongoDB connected");
   } catch (err) {
     console.error("❌ MongoDB connection failed:", err);
@@ -69,21 +68,6 @@ app.get("/", (req, res) => {
   res.send("SkillBridge Backend is running 🚀");
 });
 
-// ✅ Test Database Route
-app.get("/test-db", async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json({
-      message: "Database connected ✅",
-      totalUsers: users.length,
-      users,
-    });
-  } catch (err) {
-    console.error("Database fetch error:", err);
-    res.status(500).json({ error: "Database not reachable ❌" });
-  }
-});
-
 // ✅ Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error("Server error:", err.message);
@@ -95,3 +79,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
+

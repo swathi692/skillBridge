@@ -10,7 +10,7 @@ export default function Signup({ onSignup }) {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", { name, email });
+      const res = await axios.post("https://skillbridge-lviu.onrender.com/api/auth/signup", { name, email });
       onSignup(res.data); // set user in App state
       setMessage("✅ Signup successful!");
     } catch (err) {

@@ -9,7 +9,7 @@ export default function Login({ onLogin }) {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", { email });
+      const res = await axios.post("https://skillbridge-lviu.onrender.com/api/auth/login", { email });
       onLogin(res.data); // set user in App state
       setMessage("✅ Logged in successfully!");
     } catch (err) {
