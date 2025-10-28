@@ -8,14 +8,13 @@ export default function Signup({ onSignup }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", { name, email });
-      onSignup(res.data); // set user in App state
+      const res = await axios.post("/api/auth/signup", { name, email });
+      onSignup(res.data);
       setMessage("✅ Signup successful!");
     } catch (err) {
       console.error("Signup error:", err.response?.data || err.message);
-      setMessage("❌ Signup failed");
+      setMessage(err.response?.data?.error || "❌ Signup failed");
     }
   };
 

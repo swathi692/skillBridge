@@ -7,14 +7,13 @@ export default function Login({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", { email });
-      onLogin(res.data); // set user in App state
+      const res = await axios.post("/api/auth/login", { email });
+      onLogin(res.data);
       setMessage("✅ Logged in successfully!");
     } catch (err) {
       console.error("Login error:", err.response?.data || err.message);
-      setMessage("❌ User not found");
+      setMessage(err.response?.data?.error || "❌ Login failed");
     }
   };
 
