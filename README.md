@@ -1,9 +1,2 @@
-# Backend
-
-Run:
-
-```
-cd backend
-npm install
-npm run dev
-```
+# skillBridge
+Full-stack SkillBridge web project with frontend and backend.
