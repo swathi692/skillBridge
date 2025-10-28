@@ -17,20 +17,19 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Allowed frontend origins
+// ✅ Allowed frontend origins (add your deployed frontend + backend URLs)
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://skillbridge-6c0zfh8i2-swathis-projects-cf279158.vercel.app"
+  "https://skillbridge-6c0zfh8i2-swathis-projects-cf279158.vercel.app", // your Vercel frontend
+  "https://skillbridge-lviu.onrender.com" // your Render backend (if used for API calls)
 ];
 
 // ✅ CORS Middleware (must be before routes)
 app.use(
   cors({
     origin: function (origin, callback) {
-      console.log("Request Origin:", origin); // debug
-      if (!origin || origin.startsWith("http://localhost")) {
-        callback(null, true);
-      } else if (allowedOrigins.includes(origin)) {
+      console.log("Request Origin:", origin);
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
@@ -58,12 +57,12 @@ const connectDB = async () => {
 connectDB();
 
 // ✅ API Routes
-app.use("/api/auth", authRoutes);        // Signup / Login
-app.use("/api/users", userRoutes);       // Get / Update Users
-app.use("/api/exchanges", exchangeRoutes); // Add / Get Exchanges
-app.use("/api/messages", messageRoutes);   // Add / Get Messages
-app.use("/api/ratings", ratingRoutes);     // Add / Get Ratings
-app.use("/admin", adminRoutes);            // Admin-specific routes
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/exchanges", exchangeRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/ratings", ratingRoutes);
+app.use("/admin", adminRoutes);
 
 // ✅ Root Route
 app.get("/", (req, res) => {
